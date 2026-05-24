@@ -1,0 +1,51 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# filters_progression.txt
+# Format : A | B
+#   A = toutes les lettres autorisées (cumulatif)
+#   B = nouvelles lettres du niveau (au moins une doit être présente)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Niveau 01 : +fj
+fj | fj
+
+# Niveau 02 : +aé
+afjé | aé
+
+# Niveau 03 : +dk
+adfjké | dk
+
+# Niveau 04 : +ls
+adfjklsé | ls
+
+# Niveau 05 : +gh
+adfghjklsé | gh
+
+# Niveau 06 : +ru
+adfghjklrsué | ru
+
+# Niveau 07 : +ei
+adefghijklrsué | ei
+
+# Niveau 08 : +ow
+adefghijklorsuwé | ow
+
+# Niveau 09 : +pq
+adefghijklopqrsuwé | pq
+
+# Niveau 10 : +tz
+adefghijklopqrstuwzé | tz
+
+# Niveau 11 : +nv
+adefghijklnopqrstuvwzé | nv
+
+# Niveau 12 : +cm
+acdefghijklmnopqrstuvwzé | cm
+
+# Niveau 13 : +bx
+abcdefghijklmnopqrstuvwxzé | bx
+
+# Niveau 14 : +yè
+abcdefghijklmnopqrstuvwxyzèé | yè
+
+# Niveau 15 : +à
+abcdefghijklmnopqrstuvwxyzàèé | à
