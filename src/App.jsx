@@ -4,29 +4,42 @@ import LoginScreen from './components/LoginScreen';
 import XmlLoadScreen from './components/XmlLoadScreen';
 import LevelSelect from './components/LevelSelect';
 import GameScreen from './components/GameScreen';
+import { parseXML } from './utils/xml';
+import defaultXmlRaw from './assets/base_level.xml?raw';
 
 function readCookieState() {
   const s = loadCookie();
-  return s?.name
-    ? { screen: 'xml_load', save: s }
-    : { screen: 'login', save: { name: '', unlocked: 0, best: {} } };
+  if (s?.name) {
+    try {
+      return { screen: 'select', save: s, levels: parseXML(defaultXmlRaw) };
+    } catch {
+      return { screen: 'xml_load', save: s, levels: null };
+    }
+  }
+  return { screen: 'login', save: { name: '', unlocked: 0 }, levels: null };
 }
 
-const { screen: initialScreen, save: initialSave } = readCookieState();
+const { screen: initialScreen, save: initialSave, levels: initialLevels } = readCookieState();
 
 export default function SpaceTyping() {
   const [screen, setScreen] = useState(initialScreen);
   const [save, setSave] = useState(initialSave);
-  const [levels, setLevels] = useState(null);
+  const [levels, setLevels] = useState(initialLevels);
   const [lvIdx, setLvIdx] = useState(0);
 
   function handleLogin(name) {
-    const s = { name, unlocked: 0, best: {} };
-    setSave(s); saveCookie(s); setScreen('xml_load');
+    const s = { name, unlocked: 0 };
+    setSave(s); saveCookie(s);
+    try {
+      setLevels(parseXML(defaultXmlRaw));
+      setScreen('select');
+    } catch {
+      setScreen('xml_load');
+    }
   }
 
   function handleReset() {
-    clearCookie(); setSave({ name: '', unlocked: 0, best: {} }); setLevels(null); setScreen('login');
+    clearCookie(); setSave({ name: '', unlocked: 0 }); setLevels(null); setScreen('login');
   }
 
   function handleSaveUpdate(updated) {

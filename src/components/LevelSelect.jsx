@@ -2,6 +2,16 @@ import StarField from './StarField';
 
 const LEVEL_EMOJIS = ['🏠', '🏠', '🏠', '🏠', '🏡', '🌙', '🌙', '⭐', '⭐', '✨', '✨', '🪐', '🌌', '🚀', '🌠'];
 
+function StarsDisplay({ count }) {
+  return (
+    <span style={{ fontSize: 15, letterSpacing: 3 }}>
+      {[1, 2, 3].map(i => (
+        <span key={i} style={{ color: i <= count ? '#ffe600' : '#1e3050', textShadow: i <= count ? '0 0 8px #ffe60055' : 'none' }}>★</span>
+      ))}
+    </span>
+  );
+}
+
 export default function LevelSelect({ save, levels, onPlay, onReset, onReloadXml }) {
   return (
     <div style={{
@@ -13,14 +23,14 @@ export default function LevelSelect({ save, levels, onPlay, onReset, onReloadXml
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
           <div>
-            <div style={{ color: '#00e5ff', fontSize: 18, fontWeight: 'bold', letterSpacing: 3 }}>🚀 Mission Cosmos</div>
-            <div style={{ color: '#3a5070', fontSize: 11, letterSpacing: 2, marginTop: 2 }}>Pilote : {save.name}</div>
+            <div style={{ color: '#00e5ff', fontSize: 20, fontWeight: 'bold', letterSpacing: 3 }}>🚀 Mission Cosmos</div>
+            <div style={{ color: '#90b0d0', fontSize: 13, letterSpacing: 2, marginTop: 4 }}>Pilote : {save.name}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={onReloadXml} style={{ background: '#0a1428', border: '1px solid #1a3050', borderRadius: 8, padding: '6px 12px', color: '#3a5570', fontSize: 11, cursor: 'pointer', letterSpacing: 1 }}>
+            <button onClick={onReloadXml} style={{ background: '#0a1428', border: '1px solid #1a3050', borderRadius: 8, padding: '7px 14px', color: '#a0c0e0', fontSize: 13, cursor: 'pointer', letterSpacing: 1 }}>
               📂 XML
             </button>
-            <button onClick={onReset} style={{ background: '#0a1428', border: '1px solid #1a3050', borderRadius: 8, padding: '6px 12px', color: '#334466', fontSize: 11, cursor: 'pointer', letterSpacing: 1 }}>
+            <button onClick={onReset} style={{ background: '#0a1428', border: '1px solid #1a3050', borderRadius: 8, padding: '7px 14px', color: '#a0c0e0', fontSize: 13, cursor: 'pointer', letterSpacing: 1 }}>
               Changer de pilote
             </button>
           </div>
@@ -29,9 +39,9 @@ export default function LevelSelect({ save, levels, onPlay, onReset, onReloadXml
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 10 }}>
           {levels.map((lv, i) => {
             const unlocked = i <= save.unlocked;
-            const best = save.best?.[i] || 0;
-            const done = best > 0;
+            const done = i < save.unlocked;
             const emoji = LEVEL_EMOJIS[Math.min(i, LEVEL_EMOJIS.length - 1)];
+            const best = save.bestScores?.[lv.name];
             return (
               <div
                 key={i}
@@ -47,17 +57,22 @@ export default function LevelSelect({ save, levels, onPlay, onReset, onReloadXml
                 }}
               >
                 <div style={{ fontSize: 26, marginBottom: 6 }}>{unlocked ? emoji : '🔒'}</div>
-                <div style={{ fontSize: 11, color: done ? '#00e5ff' : unlocked ? '#445566' : '#2a3a4a', fontWeight: 'bold', letterSpacing: 1, marginBottom: 4 }}>
+                <div style={{ fontSize: 13, color: done ? '#00e5ff' : unlocked ? '#a0b8d0' : '#6080a0', fontWeight: 'bold', letterSpacing: 1, marginBottom: 4 }}>
                   {lv.name}
                 </div>
-                {done && <div style={{ fontSize: 10, color: '#ffe600' }}>⭐ {best} pts</div>}
-                {!done && unlocked && <div style={{ fontSize: 9, color: '#2a3a4a', letterSpacing: 1 }}>APPUYER</div>}
+                {done && (
+                  <div>
+                    <StarsDisplay count={best?.stars || 0} />
+                    {best && <div style={{ fontSize: 12, color: '#80c098', marginTop: 4, fontWeight: 'bold' }}>{best.cpm} car/min</div>}
+                  </div>
+                )}
+                {!done && unlocked && <div style={{ fontSize: 12, color: '#6890b0', letterSpacing: 2, fontWeight: 'bold' }}>APPUYER</div>}
               </div>
             );
           })}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: 18, fontSize: 10, color: '#1e2e40', letterSpacing: 2 }}>
+        <div style={{ textAlign: 'center', marginTop: 22, fontSize: 12, color: '#7090b0', letterSpacing: 2, fontWeight: 'bold' }}>
           {save.unlocked + 1}/{levels.length} niveaux débloqués
         </div>
       </div>
